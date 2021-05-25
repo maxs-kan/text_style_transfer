@@ -48,7 +48,7 @@ def decode_text(model, decoder, inp):
 
 def test(informal):
     if torch.cuda.is_available():
-        device = torch.device('cuda:1')
+        device = torch.device('cuda')
         print(f'Using GPU device: {device}')
     else:
         device = torch.device('cpu')

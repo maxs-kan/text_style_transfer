@@ -184,7 +184,7 @@ def run_epoch(data_iter, model, lr_scheduler, optimizer, criterion, device):
 def train(informal, formal, inf_val, for_val):
     
     if torch.cuda.is_available():
-        device = torch.device('cuda:1')
+        device = torch.device('cuda')
         print(f'Using GPU device: {device}')
     else:
         device = torch.device('cpu')
