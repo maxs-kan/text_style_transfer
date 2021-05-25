@@ -12,7 +12,7 @@ import numpy as np
 import os
 from tqdm import tqdm
 import copy
-import wandb
+# import wandb
 import pandas as pd
 
 import gc
@@ -146,11 +146,11 @@ def run_val(data_iter, model, criterion, device):
             loss_t = loss_t.view(-1, 512)
             
             loss = torch.mean(torch.sum(loss_t * mask, dim=-1))
-            if i % 50 == 0:
-                wandb.log({'val_loss':loss})
-            if i % 100 == 0:
-                data = decode_text(model, data_iter.dataset.tokenizer, inp, dec_inp)
-                wandb.log({"val_examples": wandb.Table(dataframe=data)})
+#             if i % 50 == 0:
+#                 wandb.log({'val_loss':loss})
+#             if i % 100 == 0:
+#                 data = decode_text(model, data_iter.dataset.tokenizer, inp, dec_inp)
+#                 wandb.log({"val_examples": wandb.Table(dataframe=data)})
     
 def run_epoch(data_iter, model, lr_scheduler, optimizer, criterion, device):
     for i, batch in tqdm(enumerate(data_iter)):
@@ -175,11 +175,11 @@ def run_epoch(data_iter, model, lr_scheduler, optimizer, criterion, device):
         optimizer.step()
         cleanup()
 
-        if i % 50 == 0:
-            wandb.log({'train_loss':loss})
-        if i % 500 == 0:
-            data = decode_text(model, data_iter.dataset.tokenizer, inp, dec_inp)
-            wandb.log({"train_examples": wandb.Table(dataframe=data)})
+#         if i % 50 == 0:
+#             wandb.log({'train_loss':loss})
+#         if i % 500 == 0:
+#             data = decode_text(model, data_iter.dataset.tokenizer, inp, dec_inp)
+#             wandb.log({"train_examples": wandb.Table(dataframe=data)})
         
 def train(informal, formal, inf_val, for_val):
     
@@ -189,7 +189,7 @@ def train(informal, formal, inf_val, for_val):
     else:
         device = torch.device('cpu')
         print(f'GPU is not available, using CPU device {device}')
-    wandb.init(project="NLP_BART")
+#     wandb.init(project="NLP_BART")
 
     train_config = {'batch_size': 5, 'n_epochs': 5, 'save_dir':'./checkpoints/', 'alpha':0.05, 'lr_scheduler': {
         'type': 'warmup,decay_linear',
