@@ -54,7 +54,7 @@ def test(informal):
         device = torch.device('cpu')
         print(f'GPU is not available, using CPU device {device}')
     
-    test_config = {'batch_size':5, 'epoch':5, 'save_dir':'./checkpoints/'}
+    test_config = {'batch_size':5, 'epoch':5, 'save_dir':'./'}
     
     test_dataset = FormalDataset(informal)
     dataloader = DataLoader(test_dataset, batch_size=test_config['batch_size'], shuffle=False, num_workers=4, drop_last=False)

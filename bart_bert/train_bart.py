@@ -191,7 +191,7 @@ def train(informal, formal, inf_val, for_val):
         print(f'GPU is not available, using CPU device {device}')
 #     wandb.init(project="NLP_BART")
 
-    train_config = {'batch_size': 5, 'n_epochs': 5, 'save_dir':'./checkpoints/', 'alpha':0.05, 'lr_scheduler': {
+    train_config = {'batch_size': 5, 'n_epochs': 5, 'save_dir':'./', 'alpha':0.05, 'lr_scheduler': {
         'type': 'warmup,decay_linear',
         'warmup_steps_part': 0.05,
         'lr_peak': 1e-4,
