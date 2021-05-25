@@ -85,6 +85,6 @@ if __name__=='__main__':
     parser.add_argument('-w', "--weights", help="path to pretrained weights", required=True)
     args = parser.parse_args()
     path = args.inputs
-    informal = load_dataset(path, args.weights)
+    informal = load_dataset(path)
     
-    test(informal)
+    test(informal, args.weights)
