@@ -21,9 +21,8 @@ def load_dataset(data_dir, phase='test'):
 
     return informal
 
-def load_model(epoch, model, model_dir_path):
-    save_path = os.path.join(model_dir_path, '{}.pt'.format(epoch))
-    checkpoint = torch.load(save_path, map_location=torch.device('cpu'))
+def load_model(model, weights):
+    checkpoint = torch.load(weights, map_location=torch.device('cpu'))
     model.load_state_dict(checkpoint['model_state_dict'])
 
 class FormalDataset(Dataset):
@@ -46,7 +45,7 @@ def decode_text(model, decoder, inp):
     idx = [decoder.decode(g, skip_special_tokens=True) for g in idx] #, clean_up_tokenization_spaces=False
     return idx
 
-def test(informal):
+def test(informal, weights):
     if torch.cuda.is_available():
         device = torch.device('cuda')
         print(f'Using GPU device: {device}')
@@ -54,13 +53,13 @@ def test(informal):
         device = torch.device('cpu')
         print(f'GPU is not available, using CPU device {device}')
     
-    test_config = {'batch_size':5, 'epoch':5, 'save_dir':'./'}
+    test_config = {'batch_size':5}
     
     test_dataset = FormalDataset(informal)
     dataloader = DataLoader(test_dataset, batch_size=test_config['batch_size'], shuffle=False, num_workers=4, drop_last=False)
 #     config = BartConfig()
     model = BartForConditionalGeneration.from_pretrained('facebook/bart-base')
-    load_model(test_config['epoch'], model, test_config['save_dir'])
+    load_model( model, weights)
     model.config.decoder_start_token_id = test_dataset.tokenizer.cls_token_id
     model.to(device)
     model.eval()
@@ -83,8 +82,9 @@ if __name__=='__main__':
     
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', "--inputs", help="path to training data, expected structure: ~/inputs/test/informal", required=True)
+    parser.add_argument('-w', "--weights", help="path to pretrained weights", required=True)
     args = parser.parse_args()
     path = args.inputs
-    informal = load_dataset(path)
+    informal = load_dataset(path, args.weights)
     
     test(informal)
