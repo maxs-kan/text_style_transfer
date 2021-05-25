@@ -30,7 +30,7 @@ class MyDataset(torch.utils.data.Dataset):
 
 
 def get_sta(classifier_path, preds,
-            toxification=False, labels_path='./', threshold=0.5, batch_size=32):
+            toxification=False, labels_path='./', threshold=0.5, batch_size=32, target_informal=False):
     """
     This is a function for evaluating Style Transfer Accuracy (STA) metric. As for classifier here we use
     specially pretrained Roberta classifier.
@@ -46,7 +46,9 @@ def get_sta(classifier_path, preds,
     print('Calculating Style Transfer Accuracy')
     
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    
+    preds = preds.copy()
+    for i in range(len(preds)):
+        preds[i] = preds[i].lower()
     res = []
     model = BertForSequenceClassification.from_pretrained(classifier_path)
     model = model.eval().to(device)
@@ -68,4 +70,8 @@ def get_sta(classifier_path, preds,
             #     res.extend([int(tox_pred[1] > threshold) for tox_pred in toxic_predictions])
             # else:
             #     res.extend([int(tox_pred[1] < threshold) for tox_pred in toxic_predictions])
-    return sum(np.array(res))/len(res)
+    if target_informal:
+        print('Target informal')
+        return 1. - sum(np.array(res))/len(res)
+    else:
+        return sum(np.array(res))/len(res)

@@ -12,7 +12,7 @@ def cleanup():
 
 
 def evaluate_st(inputs, preds, tox_classifier_path, labels_path, toxification, classification_threshold, batch_size,
-                 t1, t2, t3):
+                 t1, t2, t3, target_informal):
     """
     This function is defined to calculate all metrics to evaluate the performance of style transfer method.
     :param inputs: the list of original sentences;
@@ -28,7 +28,7 @@ def evaluate_st(inputs, preds, tox_classifier_path, labels_path, toxification, c
         
     # accuracy of style transfer
     accuracy = get_sta(tox_classifier_path, preds,
-                       toxification, labels_path, classification_threshold, batch_size)
+                       toxification, labels_path, classification_threshold, batch_size, target_informal)
     cleanup()
     
     # similarity

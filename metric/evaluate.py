@@ -8,9 +8,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', "--inputs", help="path to test sentences", required=True)
     parser.add_argument('-p', "--preds", help="path to predictions of a model", required=True)
-
+    parser.add_argument("--target_informal", action='store_true')
     parser.add_argument("--tox_classifier_path",
-                        default='./toxicity_classifier_music')
+                        default='./clf_family')
     parser.add_argument("--labels_path",
                         default='./')
     parser.add_argument("--threshold", default=0.8, type=float)
@@ -27,12 +27,18 @@ if __name__ == "__main__":
     with open(args.inputs, 'r') as input_file, open(args.preds, 'r') as preds_file:
         inputs = input_file.readlines()
         preds = preds_file.readlines()
+    
+#     for i in range(len(inputs)):
+#         inputs[i] = inputs[i].lower()
+#     for i in range(len(inputs)):
+#         preds[i] = preds[i].lower()
+    
     print(len(inputs))
     print(len(preds))
     print('-'*20)
     accuracy, emb_sim, bleu, token_ppl, gm = evaluate_st(inputs, preds,
                                                           args.tox_classifier_path, args.labels_path, args.toxification, args.threshold, args.batch_size,
-                                                          args.t1, args.t2, args.t3)
+                                                          args.t1, args.t2, args.t3, args.target_informal)
 
     # write res to table
     if not os.path.exists('results.md'):

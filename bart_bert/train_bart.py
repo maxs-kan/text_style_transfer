@@ -127,7 +127,7 @@ def decode_text(model, decoder, inp, target):
         d = {'informal': inp, 'predict': idx, 'formal':target}
         return pd.DataFrame(data=d)
     
-def run_val(data_iter, model, device):
+def run_val(data_iter, model, criterion, device):
     with torch.no_grad():
         for i, batch in tqdm(enumerate(data_iter)):
             inp = batch[0]['input_ids'].to(device)
@@ -190,7 +190,7 @@ def train(informal, formal, inf_val, for_val):
         print(f'GPU is not available, using CPU device {device}')
     wandb.init(project="NLP_BART")
 
-    train_config = {'batch_size': 5, 'n_epochs': 3, 'save_dir':'./checkpoints/', 'alpha':0.05, 'lr_scheduler': {
+    train_config = {'batch_size': 5, 'n_epochs': 5, 'save_dir':'./checkpoints/', 'alpha':0.05, 'lr_scheduler': {
         'type': 'warmup,decay_linear',
         'warmup_steps_part': 0.05,
         'lr_peak': 1e-4,
@@ -220,7 +220,7 @@ def train(informal, formal, inf_val, for_val):
         run_epoch(train_dataloader, model,
                   lr_scheduler, optimizer, criterion, device)
         model.eval()
-        run_val(val_dataloader, model, device)
+        run_val(val_dataloader, model, criterion, device)
         save_checkpoint(epoch, model, lr_scheduler, optimizer, train_config['save_dir'])
 
 if __name__=='__main__':
@@ -230,7 +230,7 @@ if __name__=='__main__':
     torch.manual_seed(seed_val)
     torch.cuda.manual_seed_all(seed_val)
     
-    path = './GYAFC_Corpus/Entertainment_Music'
+    path = './GYAFC_Corpus/Family_Relationships/'
     formal, informal = load_dataset(path)
     for_val, inf_val = load_dataset(path, phase='tune')
     train(informal, formal, inf_val, for_val)
