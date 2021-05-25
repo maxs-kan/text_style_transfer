@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from transformers import BartTokenizer, BartForConditionalGeneration
 from torch.utils.data import Dataset, DataLoader
 
+import argparse
 import codecs
 import random
 import numpy as np
@@ -80,7 +81,10 @@ if __name__=='__main__':
     torch.manual_seed(seed_val)
     torch.cuda.manual_seed_all(seed_val)
     
-    path = './GYAFC_Corpus/Family_Relationships/'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', "--inputs", help="path to training data, expected structure: ~/inputs/test/informal", required=True)
+    args = parser.parse_args()
+    path = parser.i
     informal = load_dataset(path)
     
     test(informal)

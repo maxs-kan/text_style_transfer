@@ -5,6 +5,7 @@ from transformers import BartTokenizer, BartForConditionalGeneration
 from torch.utils.data import Dataset, DataLoader
 from smooth_loss import SmoothCrossEntropyLoss
 
+import argparse
 import codecs
 import random
 import numpy as np
@@ -230,7 +231,10 @@ if __name__=='__main__':
     torch.manual_seed(seed_val)
     torch.cuda.manual_seed_all(seed_val)
     
-    path = './GYAFC_Corpus/Family_Relationships/'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', "--inputs", help="path to training data, expected structure: ~/inputs/{train,tune}/{{formal}, {informal}, {informal, formal.ref0}}", required=True)
+    args = parser.parse_args()
+    path = parser.i
     formal, informal = load_dataset(path)
     for_val, inf_val = load_dataset(path, phase='tune')
     train(informal, formal, inf_val, for_val)
