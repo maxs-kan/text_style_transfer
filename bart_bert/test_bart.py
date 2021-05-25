@@ -84,7 +84,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', "--inputs", help="path to training data, expected structure: ~/inputs/test/informal", required=True)
     args = parser.parse_args()
-    path = parser.i
+    path = parser.inputs
     informal = load_dataset(path)
     
     test(informal)
